@@ -22,7 +22,7 @@ export default function Home() {
     setActiveUsers(mockUsers)
   }, [])
 
-  const handleLogin = (username: string) => {
+  const handleLogin = useCallback((username: string) => {
     const newUser: User = {
       id: `user-${activeUsers.length + 1}`,
       username,
@@ -30,7 +30,7 @@ export default function Home() {
       longitude: 20.8016,
     }
     setCurrentUser(newUser)
-    setActiveUsers(prevUsers => [...prevUsers, newUser])
+    setActiveUsers(prevUsers => [...prevUsers, newUser])}, [activeUsers.length])
   }
 
   const handleStartConversation = (userId: string) => {
