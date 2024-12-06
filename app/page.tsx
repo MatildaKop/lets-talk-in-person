@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import dynamic from 'next/dynamic'
 import Login from '@/components/Login'
 import Header from '@/components/Header'
@@ -26,19 +26,19 @@ export default function Home() {
     const newUser: User = {
       id: `user-${activeUsers.length + 1}`,
       username,
-      latitude: 41.1231, // Default to Ohrid coordinates
+      latitude: 41.1231,
       longitude: 20.8016,
     }
     setCurrentUser(newUser)
-    setActiveUsers(prevUsers => [...prevUsers, newUser])}, [activeUsers.length])
-  }
+    setActiveUsers(prevUsers => [...prevUsers, newUser])
+  }, [activeUsers.length])
 
-  const handleStartConversation = (userId: string) => {
+  const handleStartConversation = useCallback((userId: string) => {
     const user = activeUsers.find(u => u.id === userId)
     if (user) {
       alert(`Starting conversation with ${user.username}`)
     }
-  }
+  }, [activeUsers])
 
   if (!currentUser) {
     return (
@@ -65,4 +65,3 @@ export default function Home() {
     </div>
   )
 }
-
