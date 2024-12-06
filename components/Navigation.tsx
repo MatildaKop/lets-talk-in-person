@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Home, User, History } from 'lucide-react'
+import React from 'react'
 
 export default function Navigation() {
   const pathname = usePathname()
@@ -18,7 +19,7 @@ export default function Navigation() {
   )
 }
 
-function NavLink({ href, icon, label, isActive }) {
+function NavLink({ href, icon, label, isActive }: { href: string; icon: React.ReactNode; label: string; isActive: boolean }) {
   return (
     <Link href={href} className={`flex flex-col items-center ${isActive ? 'text-blue-500' : 'text-gray-600'}`}>
       {icon}
@@ -26,5 +27,3 @@ function NavLink({ href, icon, label, isActive }) {
     </Link>
   )
 }
-
-
