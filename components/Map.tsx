@@ -54,96 +54,8 @@ export default function Map({ currentUser, activeUsers, onStartConversation }: M
       setIsLoading(false)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err)
-      addDebugInfo(`Error initializing map: ${errorMessage}`)
-      setError(`Failed to initialize map: ${errorMessage}`)
-      setIsLoading(false)
-    }
-  }, [currentUser, activeUsers, onStartConversation, addDebugInfo])
-
-  useEffect(() => {
-    if (typeof window === 'undefined'
- if (user.id !== currentUser.id) {
-          marker.addListener('click', () => {
-            onStartConversation(user.id)
-          })
-        }
-
-        return marker
-      })
-
-      setMarkers(newMarkers)
-      addDebugInfo('Markers added successfully')
-      setIsLoading(false)
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : String(err)
-      addDebugInfo(`Error initializing map: ${errorMessage}`)
-      setError(`Failed to initialize map: ${errorMessage}`)
-      setIsLoading(false)
-    }
-  }, [currentUser, activeUsers, onStartConversation, addDebugInfo])
-
-  useEffect(() => {
-    if (typeof window === 'undefined'
-heredoc> 
-cat << EOF > components/Map.tsx
-'use client'
-
-import { useEffect, useRef, useState, useCallback } from 'react'
-import { User } from '@/lib/mockData'
-
-interface MapProps {
-  currentUser: User
-  activeUsers: User[]
-  onStartConversation: (userId: string) => void
-}
-
-export default function Map({ currentUser, activeUsers, onStartConversation }: MapProps) {
-  const mapRef = useRef<HTMLDivElement>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [debugInfo, setDebugInfo] = useState<string>('')
-  const [markers, setMarkers] = useState<google.maps.Marker[]>([])
-
-  const addDebugInfo = useCallback((info: string) => {
-    setDebugInfo(prev => `${prev}\n${info}`)
-    console.log(info)
-  }, [])
-
-  const initMap = useCallback(() => {
-    addDebugInfo('Initializing map...')
-    try {
-      if (!mapRef.current) throw new Error('Map container not found')
-
-      const map = new google.maps.Map(mapRef.current, {
-        center: { lat: currentUser.latitude, lng: currentUser.longitude },
-        zoom: 15,
-      })
-
-      addDebugInfo('Map instance created')
-
-      const newMarkers = activeUsers.map(user => {
-        const marker = new google.maps.Marker({
-          position: { lat: user.latitude, lng: user.longitude },
-          map,
-          title: user.username,
-        })
-
-        if (user.id !== currentUser.id) {
-          marker.addListener('click', () => {
-            onStartConversation(user.id)
-          })
-        }
-
-        return marker
-      })
-
-      setMarkers(newMarkers)
-      addDebugInfo('Markers added successfully')
-      setIsLoading(false)
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : String(err)
-      addDebugInfo(`Error initializing map: ${errorMessage}`)
-      setError(`Failed to initialize map: ${errorMessage}`)
+      addDebugInfo(\`Error initializing map: \${errorMessage}\`)
+      setError(\`Failed to initialize map: \${errorMessage}\`)
       setIsLoading(false)
     }
   }, [currentUser, activeUsers, onStartConversation, addDebugInfo])
@@ -157,7 +69,7 @@ export default function Map({ currentUser, activeUsers, onStartConversation }: M
     if (!window.google) {
       addDebugInfo('Loading Google Maps script...')
       const script = document.createElement('script')
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
+      script.src = \`https://maps.googleapis.com/maps/api/js?key=\${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}\`
       script.async = true
       script.defer = true
       script.onerror = () => {
