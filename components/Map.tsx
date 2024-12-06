@@ -54,8 +54,8 @@ export default function Map({ currentUser, activeUsers, onStartConversation }: M
       setIsLoading(false)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err)
-      addDebugInfo(\`Error initializing map: \${errorMessage}\`)
-      setError(\`Failed to initialize map: \${errorMessage}\`)
+      addDebugInfo(`Error initializing map: ${errorMessage}`)
+      setError(`Failed to initialize map: ${errorMessage}`)
       setIsLoading(false)
     }
   }, [currentUser, activeUsers, onStartConversation, addDebugInfo])
@@ -69,7 +69,7 @@ export default function Map({ currentUser, activeUsers, onStartConversation }: M
     if (!window.google) {
       addDebugInfo('Loading Google Maps script...')
       const script = document.createElement('script')
-      script.src = \`https://maps.googleapis.com/maps/api/js?key=\${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}\`
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
       script.async = true
       script.defer = true
       script.onerror = () => {
