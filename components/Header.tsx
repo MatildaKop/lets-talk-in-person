@@ -1,7 +1,7 @@
 'use client'
 
 import { Switch } from "@/components/ui/switch"
-import Image from 'next/image'
+import { MessageCircle } from 'lucide-react'
 
 interface HeaderProps {
   isActive: boolean
@@ -13,14 +13,10 @@ export default function Header({ isActive, onToggleActive }: HeaderProps) {
     <header className="fixed top-0 w-full bg-white border-b border-gray-200 z-10">
       <div className="flex justify-between items-center px-4 py-2">
         <div className="flex items-center gap-2">
-          <Image
-            src="/app-icon.png"
-            alt="Let'&apos;s talk!"
-            width={32}
-            height={32}
-            className="rounded-full"
-          />
-          <span className="font-semibold">Let'&apos;s talk!</span>
+          <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+            <MessageCircle className="w-5 h-5 text-white" />
+          </div>
+          <span className="font-semibold">Let&apos;s talk!</span>
         </div>
         <div className="flex items-center gap-2">
           <Switch
@@ -35,5 +31,3 @@ export default function Header({ isActive, onToggleActive }: HeaderProps) {
     </header>
   )
 }
-
-
