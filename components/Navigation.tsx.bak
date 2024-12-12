@@ -18,7 +18,7 @@ export default function Navigation() {
   )
 }
 
-function NavLink({ href, icon, label, isActive }: { href: string; icon: React.ReactNode; label: string; isActive: boolean }) {
+function NavLink({ href, icon, label, isActive }) {
   return (
     <Link href={href} className={`flex flex-col items-center ${isActive ? 'text-blue-500' : 'text-gray-600'}`}>
       {icon}
@@ -26,3 +26,5 @@ function NavLink({ href, icon, label, isActive }: { href: string; icon: React.Re
     </Link>
   )
 }
+
+

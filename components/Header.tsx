@@ -22,8 +22,9 @@ export default function Header({ isActive, onToggleActive }: HeaderProps) {
           <Switch
             checked={isActive}
             onCheckedChange={onToggleActive}
+            className={isActive ? '' : 'bg-red-500'}
           />
-          <span className="text-sm text-green-600">
+          <span className={`text-sm ${isActive ? 'text-green-600' : 'text-red-600'}`}>
             {isActive ? 'You are active!' : 'You are inactive'}
           </span>
         </div>
