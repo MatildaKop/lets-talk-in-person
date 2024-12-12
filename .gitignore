@@ -128,3 +128,12 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+# Next.js
+/.next/
+/out/
+
+# Local env files
+.env*.local
+
+# Vercel
+.vercel
