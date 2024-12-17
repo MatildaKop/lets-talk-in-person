@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react';
-import { User } from '@/lib/types';
+import { User } from '../lib/types';
 import { Switch } from '@/components/ui/switch';
 import { ChevronDown, ChevronUp, Eye, EyeOff } from 'lucide-react';
 
@@ -89,7 +89,7 @@ const ProfilePage: React.FC = () => {
         onVisibilityToggle={() => toggleVisibility('interests')}
       >
         <ul>
-          {user.interests.map((interest, index) => (
+          {user.interests?.map((interest, index) => (
             <li key={index}>{interest}</li>
           ))}
         </ul>
@@ -102,8 +102,8 @@ const ProfilePage: React.FC = () => {
         onToggle={() => toggleSection('location')}
         onVisibilityToggle={() => toggleVisibility('location')}
       >
-        <p>Latitude: {user.location.lat}</p>
-        <p>Longitude: {user.location.lng}</p>
+        <p>Latitude: {user.location?.lat}</p>
+        <p>Longitude: {user.location?.lng}</p>
       </Section>
     </div>
   );
