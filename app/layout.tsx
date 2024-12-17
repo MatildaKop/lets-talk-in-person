@@ -1,40 +1,42 @@
-import React from 'react';
-import { Inter } from 'next/font/google';
-import Link from 'next/link';
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import './globals.css'
+import { BottomNavigation } from '@/components/bottom-navigation'
+import { UserStatusSwitch } from '@/components/user-status-switch'
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ['latin'] })
+
+export const metadata: Metadata = {
+  title: "Let's Talk in Person",
+  description: 'Connect with people near you',
+}
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const currentDate = new Date().toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-
   return (
     <html lang="en">
       <body className={inter.className}>
-        <header className="bg-gray-800 text-white p-4">
-          <div className="container mx-auto flex justify-between items-center">
-            <h1 className="text-2xl font-bold">Let&apos;s Talk</h1>
-            <nav>
-              <ul className="flex space-x-4">
-                <li><Link href="/" className="hover:text-gray-300">Home</Link></li>
-                <li><Link href="/profile" className="hover:text-gray-300">Profile</Link></li>
-                <li><Link href="/history" className="hover:text-gray-300">History</Link></li>
-              </ul>
-            </nav>
-          </div>
-        </header>
-        <main className="container mx-auto mt-4">
-          <p className="text-gray-600 mb-4">{currentDate}</p>
-          {children}
-        </main>
+        <div className="min-h-screen bg-background flex flex-col">
+          <header className="border-b p-4 flex justify-between items-center">
+            <div>
+              <h1 className="text-2xl font-bold">Let&apos;s Talk</h1>
+              <p className="text-sm text-muted-foreground mt-1">
+                {new Date().toLocaleDateString('en-US', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </p>
+            </div>
+            <UserStatusSwitch />
+          </header>
+          <main className="flex-grow">{children}</main>
+          <BottomNavigation />
+        </div>
       </body>
     </html>
   )
