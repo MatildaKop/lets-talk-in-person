@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import { BottomNavigation } from '@/components/bottom-navigation'
 import { UserStatusSwitch } from '@/components/user-status-switch'
+import { BottomNavigation } from '@/components/bottom-navigation'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -34,7 +34,7 @@ export default function RootLayout({
             </div>
             <UserStatusSwitch />
           </header>
-          <main className="flex-grow">{children}</main>
+          <main className="flex-grow pb-16">{children}</main>
           <BottomNavigation />
         </div>
       </body>

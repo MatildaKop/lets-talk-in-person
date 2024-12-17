@@ -3,7 +3,6 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Home, User, Clock } from 'lucide-react'
-import { cn } from "@/lib/utils"
 
 export function BottomNavigation() {
   const pathname = usePathname()
@@ -21,11 +20,11 @@ export function BottomNavigation() {
           <Link
             key={href}
             href={href}
-            className={cn(
-              "flex flex-col items-center justify-center w-full h-full",
-              "transition-colors hover:text-primary",
-              pathname === href ? "text-primary" : "text-muted-foreground"
-            )}
+            className={`
+              flex flex-col items-center justify-center w-full h-full
+              transition-colors hover:text-primary
+              ${pathname === href ? 'text-primary' : 'text-muted-foreground'}
+            `}
           >
             <Icon className="h-6 w-6" />
             <span className="text-xs mt-1">{label}</span>
@@ -35,4 +34,3 @@ export function BottomNavigation() {
     </nav>
   )
 }
-
