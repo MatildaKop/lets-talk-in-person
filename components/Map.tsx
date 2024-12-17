@@ -8,39 +8,29 @@ interface MapProps {
   isActive: boolean;
 }
 
-const MapComponent = ({ currentUser, activeUsers, onStartConversation, isActive }: MapProps) => {
+const MapComponent: React.FC<MapProps> = ({ currentUser, activeUsers, onStartConversation, isActive }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadGoogleMapsScript = () => {
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&callback=initMap`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`;
       script.async = true;
       script.defer = true;
       document.head.appendChild(script);
 
-      script.onerror = () => {
-        console.error('Google Maps script failed to load');
-        setError('Failed to load Google Maps');
-      };
-
-      window.initMap = initMap;
+      script.onload = initMap;
+      script.onerror = () => setError('Failed to load Google Maps script');
     };
 
     const initMap = () => {
-      console.log('Initializing map with:', { currentUser, activeUsers, isActive });
-      if (!mapRef.current) return;
+      if (!mapRef.current || !window.google) return;
 
       try {
-        const defaultLocation = { lat: 37.7749, lng: -122.4194 }; // San Francisco
+        const defaultLocation = { lat: 37.7749, lng: -122.4194 };
         const mapLocation = (currentUser && currentUser.location) || defaultLocation;
 
-        if (!window.google || !window.google.maps) {
-          throw new Error('Google Maps API not loaded');
-        }
-
-        console.log('Creating map with:', { mapLocation, mapRef: mapRef.current });
         const map = new window.google.maps.Map(mapRef.current, {
           center: mapLocation,
           zoom: 10,
@@ -68,7 +58,7 @@ const MapComponent = ({ currentUser, activeUsers, onStartConversation, isActive 
         });
       } catch (err) {
         console.error('Error initializing map:', err);
-        setError(`Error initializing map: ${err instanceof Error ? err.message : JSON.stringify(err)}`);
+        setError(`Error initializing map: ${err instanceof Error ? err.message : String(err)}`);
       }
     };
 
@@ -79,7 +69,10 @@ const MapComponent = ({ currentUser, activeUsers, onStartConversation, isActive 
     }
 
     return () => {
-      delete window.initMap;
+      const script = document.querySelector('script[src^="https://maps.googleapis.com/maps/api/js"]');
+      if (script) {
+        document.head.removeChild(script);
+      }
     };
   }, [currentUser, activeUsers, onStartConversation, isActive]);
 
@@ -91,3 +84,4 @@ const MapComponent = ({ currentUser, activeUsers, onStartConversation, isActive 
 };
 
 export default MapComponent;
+
