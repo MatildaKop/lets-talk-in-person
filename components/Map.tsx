@@ -94,15 +94,15 @@ const MapComponent: React.FC<MapProps> = ({ currentUser, activeUsers, onStartCon
     }
 
     return () => {
-      if (window.google && window.google.maps) {
+      if (window.google?.maps) {
+        // @ts-ignore - Allow cleanup of google maps
         delete window.google.maps;
       }
-      if (window.initMap) {
-        delete window.initMap;
-      }
+      // @ts-ignore - Allow cleanup of initMap
+      delete window.initMap;
       const script = document.querySelector('script[src^="https://maps.googleapis.com/maps/api/js"]');
-      if (script) {
-        document.head.removeChild(script);
+      if (script && script.parentNode) {
+        script.parentNode.removeChild(script);
       }
     };
   }, [currentUser, activeUsers, onStartConversation, isActive]);
