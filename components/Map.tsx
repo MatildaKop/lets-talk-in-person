@@ -32,7 +32,13 @@ const MapComponent: React.FC<MapProps> = ({ currentUser, activeUsers, onStartCon
         return;
       }
 
+      const loadTimeout = setTimeout(() => {
+        setError('Map loading timed out. Please try again.');
+        setIsLoading(false);
+      }, 10000); // 10 seconds timeout
+
       window.initMap = () => {
+        clearTimeout(loadTimeout);
         if (!mapRef.current) return;
 
         try {
@@ -57,80 +63,98 @@ const MapComponent: React.FC<MapProps> = ({ currentUser, activeUsers, onStartCon
           }
 
           activeUsers.forEach(user => {
-            if (user.location) {
-              const marker = new window.google.maps.Marker({
-                position: user.location,
-                map,
-                title: user.name || 'Unknown User'
-              });
+            if
+cat > app/profile/page.tsx << EOL
+'use client'
 
-              marker.addListener('click', () => onStartConversation(user.id));
-            }
-          });
+import React, { useState } from 'react';
+import { User } from '@/app/lib/types';
+import { Switch } from '@/components/ui/switch';
+import { ChevronDown, ChevronUp, Eye, EyeOff } from 'lucide-react';
+import MapComponent from '@/components/Map';
 
-          setIsLoading(false);
-        } catch (err) {
-          console.error('Error initializing map:', err);
-          setError(err instanceof Error ? err.message : 'Failed to initialize map');
-          setIsLoading(false);
-        }
-      };
+interface SectionProps {
+  title: string;
+  children: React.ReactNode;
+  isOpen: boolean;
+  isVisible: boolean;
+  onToggle: () => void;
+  onVisibilityToggle: () => void;
+}
 
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&callback=initMap`;
-      script.async = true;
-      script.defer = true;
-      script.onerror = () => {
-        setError('Failed to load Google Maps script');
-        setIsLoading(false);
-      };
-      document.head.appendChild(script);
-    };
-
-    if (!window.google) {
-      loadGoogleMaps();
-    } else {
-      window.initMap();
-    }
-
-    return () => {
-      if (window.google?.maps) {
-        // @ts-ignore - Allow cleanup of google maps
-        delete window.google.maps;
-      }
-      // @ts-ignore - Allow cleanup of initMap
-      delete window.initMap;
-      const script = document.querySelector('script[src^="https://maps.googleapis.com/maps/api/js"]');
-      if (script && script.parentNode) {
-        script.parentNode.removeChild(script);
-      }
-    };
-  }, [currentUser, activeUsers, onStartConversation, isActive]);
-
-  if (error) {
-    return (
-      <div className="w-full h-[500px] flex flex-col items-center justify-center bg-gray-100 text-red-500 space-y-2">
-        <p className="font-semibold">Error loading map</p>
-        <p className="text-sm">{error}</p>
+const Section: React.FC<SectionProps> = ({ title, children, isOpen, isVisible, onToggle, onVisibilityToggle }) => {
+  return (
+    <div className="bg-white rounded-lg shadow p-4 mb-4">
+      <div className="flex justify-between items-center mb-2">
+        <h2 className="text-xl font-semibold">{title}</h2>
+        <div className="flex items-center space-x-2">
+          <button onClick={onVisibilityToggle} className="p-1">
+            {isVisible ? <Eye size={20} /> : <EyeOff size={20} />}
+          </button>
+          <button onClick={onToggle} className="p-1">
+            {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+          </button>
+        </div>
       </div>
-    );
-  }
+      {isOpen && isVisible && children}
+    </div>
+  );
+}
 
-  if (isLoading) {
-    return (
-      <div className="w-full h-[500px] flex items-center justify-center bg-gray-100">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-      </div>
-    );
-  }
+const ProfilePage: React.FC = () => {
+  const [user, setUser] = useState<User>({
+    id: '1',
+    name: 'John Doe',
+    email: 'john@example.com',
+    bio: 'I love coding!',
+    interests: ['React', 'TypeScript', 'Next.js'],
+    location: { lat: 37.7749, lng: -122.4194 },
+  });
+
+  const [sections, setSections] = useState({
+    personalInfo: { isOpen: true, isVisible: true },
+    interests: { isOpen: true, isVisible: true },
+    location: { isOpen: true, isVisible: true },
+  
+cat > app/layout.tsx << EOL
+import React from 'react';
+import { Inter } from 'next/font/google';
+import Link from 'next/link';
+
+const inter = Inter({ subsets: ['latin'] });
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const currentDate = new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
 
   return (
-    <div 
-      ref={mapRef} 
-      className="w-full h-[500px] rounded-lg shadow-lg"
-      aria-label="Google Map"
-    />
-  );
-};
-
-export default MapComponent;
+    <html lang="en">
+      <body className={inter.className}>
+        <header className="bg-gray-800 text-white p-4">
+          <div className="container mx-auto flex justify-between items-center">
+            <h1 className="text-2xl font-bold">Let's Talk</h1>
+            <nav>
+              <ul className="flex space-x-4">
+                <li><Link href="/" className="hover:text-gray-300">Home</Link></li>
+                <li><Link href="/profile" className="hover:text-gray-300">Profile</Link></li>
+                <li><Link href="/history" className="hover:text-gray-300">History</Link></li>
+              </ul>
+            </nav>
+          </div>
+        </header>
+        <main className="container mx-auto mt-4">
+          <p className="text-gray-600 mb-4">{currentDate}</p>
+          {children}
+        </main>
+      </body>
+    </html>
+  )
+}
