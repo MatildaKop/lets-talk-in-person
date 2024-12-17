@@ -1,9 +1,10 @@
 'use client'
 
 import React, { useState } from 'react';
-import { User } from '../lib/types';
+import { User } from '@/app/lib/types';
 import { Switch } from '@/components/ui/switch';
 import { ChevronDown, ChevronUp, Eye, EyeOff } from 'lucide-react';
+import MapComponent from '@/components/Map';
 
 interface SectionProps {
   title: string;
@@ -16,7 +17,7 @@ interface SectionProps {
 
 const Section: React.FC<SectionProps> = ({ title, children, isOpen, isVisible, onToggle, onVisibilityToggle }) => {
   return (
-    <div className="bg-white rounded-lg shadow p-4">
+    <div className="bg-white rounded-lg shadow p-4 mb-4">
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-xl font-semibold">{title}</h2>
         <div className="flex items-center space-x-2">
@@ -28,7 +29,7 @@ const Section: React.FC<SectionProps> = ({ title, children, isOpen, isVisible, o
           </button>
         </div>
       </div>
-      {isOpen && children}
+      {isOpen && isVisible && children}
     </div>
   );
 }
@@ -102,12 +103,15 @@ const ProfilePage: React.FC = () => {
         onToggle={() => toggleSection('location')}
         onVisibilityToggle={() => toggleVisibility('location')}
       >
-        <p>Latitude: {user.location?.lat}</p>
-        <p>Longitude: {user.location?.lng}</p>
+        <MapComponent
+          currentUser={user}
+          activeUsers={[]}
+          onStartConversation={() => {}}
+          isActive={true}
+        />
       </Section>
     </div>
   );
 };
 
 export default ProfilePage;
-
